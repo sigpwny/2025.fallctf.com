@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fall CTF 2025</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/files/14c0421b448cc63dc8a3cbbe9022d985/fallctf-2025-pwny.png" type="image/x-icon">
+
+  
+
+  
+    <link rel="stylesheet" href="/themes/core/static/assets/main.e9ec7884.css">
+  
+
+  
+
+  <script  src="/themes/core/static/assets/color_mode_switcher.52334129.js"></script>
+
+  <script type="text/javascript">
+      window.init = {
+          'urlRoot': "",
+          'csrfNonce': "d5d589b1f9af0490434674d626d66cb4b44360be1b0969f4ef16f6beeb70e535",
+          'userMode': "teams",
+          'userId': 0,
+          'userName': null,
+          'userEmail': null,
+          'userVerified': null,
+          'teamId': null,
+          'teamName': null,
+          'start': 1758474000,
+          'end': 1758495600,
+          'themeSettings': {"challenge_category_order": "function compare(a, b) {\r\n  if (a === \"Welcome\") return -1;\r\n  if (b === \"Welcome\") return 1;\r\n  return 0;\r\n}\r\n", "challenge_order": "function compare(a, b) {\r\n\r\n    // sort by value highest priority\r\n    if (a.value \u003c b.value) return -1;\r\n    if (a.value \u003e b.value) return 1;\r\n\r\n  const priority = {\u0027beginner\u0027: 1, \u0027easy\u0027: 5, \u0027medium\u0027: 10, \u0027hard\u0027: 100, \u0027extreme\u0027: 1000};\r\n  const a_tag_priority = Math.min(...(a.tags.map(v =\u003e priority[v.value] || Number.MAX_VALUE)));\r\n  const b_tag_priority = Math.min(...(b.tags.map(v =\u003e priority[v.value] || Number.MAX_VALUE)));\r\n  // sort by tag\r\n  if (a_tag_priority \u003c b_tag_priority) return -1;\r\n  if (a_tag_priority \u003e b_tag_priority) return 1;\r\n\r\n    // then sort by \u0027First\u0027, \u0027Second\u0027, \u0027Third\u0027 in name\r\n    const order = [\"First\", \"Second\", \"Third\"];\r\n    const getOrder = (name) =\u003e order.findIndex(v =\u003e name.includes(v));\r\n    const aOrder = getOrder(a.name);\r\n    const bOrder = getOrder(b.name);\r\n    if (aOrder !== -1 || bOrder !== -1) {\r\n        if (aOrder \u003c bOrder) return -1;\r\n        if (aOrder \u003e bOrder) return 1;\r\n    }\r\n\r\n    // then sort by first Roman numeral (I, II, III, IV, V) if present\r\n    const romanOrder = [\"I\", \"II\", \"III\", \"IV\", \"V\"];\r\n    const getRomanNum = (name) =\u003e {\r\n        const match = name.match(/\\b(I{1,3}|IV|V)\\b/);\r\n        return match ? romanOrder.indexOf(match[1]) : -1;\r\n    };\r\n    const aRomanNum = getRomanNum(a.name);\r\n    const bRomanNum = getRomanNum(b.name);\r\n    if (aRomanNum !== -1 || bRomanNum !== -1) {\r\n        if (aRomanNum \u003c bRomanNum) return -1;\r\n        if (aRomanNum \u003e bRomanNum) return 1;\r\n    }\r\n\r\n    // then sort by first number found in name\r\n    const getChallengeNum = (name) =\u003e {\r\n        const match = name.match(/(\\d+)/);\r\n        return match ? parseInt(match[1], 10) : Infinity;\r\n    };\r\n    const aChallengeNum = getChallengeNum(a.name);\r\n    const bChallengeNum = getChallengeNum(b.name);\r\n    if (aChallengeNum \u003c bChallengeNum) return -1;\r\n    if (aChallengeNum \u003e bChallengeNum) return 1;\r\n\r\n    return 0;\r\n}", "challenge_window_size": "lg", "use_builtin_code_highlighter": true},
+          'eventSounds': [
+            "/themes/core/static/sounds/notification.webm",
+            "/themes/core/static/sounds/notification.mp3",
+          ],
+      }
+  </script>
+
+  <style>
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* fixup code text */
+  pre code span {
+    color: white !important;
+  }
+
+  /* beginner styles at bottom */
+
+  body {
+    --color-primary: #41aaff;
+    --color-secondary: #99d4ff;
+    --color-text-body: #ffffff;
+    --color-text-nav: #000000;
+    --color-text-nav-hover: #ffffff;
+    --color-text-muted: #cccccc;
+    --color-background: #000000;
+    --color-surface-primary: #222222;
+    --color-surface-secondary: #111111;
+    --color-badge-bg: #000000;
+    --color-badge-text: #ffffff;
+    --color-beginner-tag: #41aaff;
+    --color-easy-tag: #33cc55;
+    --color-medium-tag: #ffc000;
+    --color-hard-tag: #ff4040;
+    --color-extreme-tag: #cc66ee;
+    /* challenge popup close button colors must be defined manually */
+
+    background-color: var(--color-background) !important;
+    color: var(--color-text-body) !important;
+    font-family: "Helvetica Neue", Arial, sans-serif; /* fonts */
+  }
+
+  @font-face {
+    font-family: "Helvetica Neue";
+    font-weight: 400;
+    font-style: normal;
+    src: url('https://sigpwny.com/fonts/HelveticaNeue-Regular.woff2') format("woff2"),
+    url('https://sigpwny.com/fonts/HelveticaNeue-Regular.woff') format("woff"),
+    url('https://sigpwny.com/fonts/HelveticaNeue-Regular.ttf') format("truetype");
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Helvetica Neue";
+    font-weight: 700;
+    font-style: normal;
+    src: url('https://sigpwny.com/fonts/HelveticaNeue-Bold.woff2') format("woff2"),
+    url('https://sigpwny.com/fonts/HelveticaNeue-Bold.woff') format("woff"),
+    url('https://sigpwny.com/fonts/HelveticaNeue-Bold.ttf') format("truetype");
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Helvetica Neue";
+    font-weight: 500;
+    font-style: normal;
+    src: url('https://sigpwny.com/fonts/HelveticaNeue-Medium.woff2') format("woff2"),
+    url('https://sigpwny.com/fonts/HelveticaNeue-Medium.woff') format("woff"),
+    url('https://sigpwny.com/fonts/HelveticaNeue-Medium.ttf') format("truetype");
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Helvetica Neue";
+    font-weight: 400;
+    font-style: italic;
+    src: url('https://sigpwny.com/fonts/HelveticaNeue-RegularItalic.woff2') format("woff2"),
+    url('https://sigpwny.com/fonts/HelveticaNeue-RegularItalic.woff') format("woff"),
+    url('https://sigpwny.com/fonts/HelveticaNeue-RegularItalic.ttf') format("truetype");
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Helvetica Neue";
+    font-weight: 300;
+    font-style: normal;
+    src: url('https://sigpwny.com/fonts/HelveticaNeue-Light.woff2') format("woff2"),
+    url('https://sigpwny.com/fonts/HelveticaNeue-Light.woff') format("woff"),
+    url('https://sigpwny.com/fonts/HelveticaNeue-Light.ttf') format("truetype");
+    font-display: swap;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-family: "Helvetica Neue", Arial, sans-serif !important;
+    font-weight: bold;
+    color: var(--color-primary);
+    letter-spacing: normal !important;
+  }
+  .larger-text h1 {
+    font-size: 3rem !important;
+  }
+  .larger-text h2 {
+    font-size: 2.5rem !important;
+  }
+  .larger-text {
+    font-size: 1.25rem !important;
+    line-height: 1.2;
+  }
+  .max-100 {
+    max-height: 100%;
+    max-width: 100%;
+  }
+  :not(i) {
+    font-family: "Helvetica Neue", Arial, sans-serif; /* fonts */
+  }
+  .text-muted {
+    color: var(--color-text-muted) !important;
+  }
+  .navbar {
+    background-color: var(--color-primary) !important; /* navbar */
+  }
+  .jumbotron h1,
+  .jumbotron h2,
+  .jumbotron h3 {
+    font-weight: bold !important;
+    color: var(--color-text-nav) !important;
+  }
+  .jumbotron .text-white {
+    color: var(--color-text-nav) !important;
+  }
+  .category-header,
+  .challenge-name,
+  .challenge-value {
+    font-weight: bold !important;
+  }
+  .modal-content {
+    background-color: var(
+      --color-surface-primary
+    ) !important; /* challenge popups */
+  }
+  .jumbotron {
+    background-color: var(--color-primary) !important; /* page header */
+    color: var(--color-text-nav);
+  }
+  .table,
+  .table td,
+  .table tr:nth-child(even),
+  .table tr:nth-child(odd),
+  .table > thead > tr > th,
+  .table-striped > tbody > tr:nth-of-type(odd) > *,
+  .table-striped > tbody > tr:nth-of-type(even) > * {
+    color: var(--color-text-body) !important;
+    background-color: transparent !important;
+  }
+  tr:nth-child(even) {
+    color: #f2f2f2;
+  }
+  a {
+    color: var(--color-primary) !important;
+  }
+  a:hover {
+    color: var(--color-secondary) !important;
+  }
+  .btn-dark {
+    background-color: var(
+      --color-background
+    ) !important; /* challenge buttons */
+    border-width: 4px !important;
+    border-style: solid !important;
+    border-color: var(--color-primary) !important;
+    box-shadow: none !important;
+    font-weight: bold !important;
+  }
+  .btn-dark:hover {
+    background-color: var(
+      --color-surface-primary
+    ) !important; /* challenge buttons */
+    border-width: 4px !important;
+    border-color: var(--color-primary) !important;
+  }
+  .btn-dark:active {
+    background-color: var(
+      --color-surface-primary
+    ) !important; /* challenge buttons */
+    border-width: 4px !important;
+    border-color: var(--color-primary) !important;
+  }
+  .challenge-solved {
+    background-color: var(--color-primary) !important; /* solved challenge */
+    border-color: var(--color-primary) !important;
+    border-width: 4px !important;
+    border-style: solid !important;
+    opacity: 1 !important;
+    color: var(--color-background) !important;
+  }
+  .challenge-solved:active {
+    background-color: var(--color-secondary) !important; /* solved challenge */
+    border-color: var(--color-secondary) !important;
+    border-width: 4px !important;
+    opacity: 1 !important;
+  }
+  .challenge-solved:hover {
+    background-color: var(--color-secondary) !important; /* solved challenge */
+    border-color: var(--color-secondary) !important;
+    border-width: 4px !important;
+    opacity: 1 !important;
+  }
+  .challenge-solved:focus {
+    background-color: var(--color-secondary) !important; /* solved challenge */
+    border-color: var(--color-secondary) !important;
+    border-width: 4px !important;
+    opacity: 1 !important;
+    box-shadow: none !important;
+  }
+  .btn-primary,
+  .btn-info,
+  .btn-outline-secondary {
+    background-color: var(--color-primary) !important; /* generic buttons */
+    color: var(--color-background) !important;
+    border: none !important;
+  }
+  .btn-primary:hover,
+  .btn-info:hover,
+  .btn-outline-secondary:hover {
+    background-color: var(--color-secondary) !important; /* generic buttons */
+    color: var(--color-background) !important;
+    border: none !important;
+  }
+  .btn-primary:active,
+  .btn-info:active,
+  .btn-outline-secondary:active {
+    background-color: var(--color-secondary) !important; /* generic buttons */
+    color: var(--color-background) !important;
+    border: none !important;
+  }
+  .btn-primary:focus,
+  .btn-info:focus,
+  .btn-outline-secondary:focus {
+    background-color: var(--color-secondary) !important; /* generic buttons */
+    color: var(--color-background) !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+  .modal-body .btn-close,
+  .modal-header .btn-close {
+    /* challenge popup close button */
+    background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ed7a31'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
+    opacity: 1 !important;
+  }
+  .modal-body .btn-close:hover,
+  .modal-header .btn-close:hover {
+    background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23995522'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
+    opacity: 1 !important;
+  }
+  input,
+  .form-control {
+    background-color: var(--color-surface-primary) !important;
+    color: var(--color-text-muted) !important;
+    border-color: var(--color-text-muted) !important;
+    box-shadow: none !important;
+  }
+  input:active,
+  .form-control:active {
+    background-color: var(--color-surface-secondary) !important;
+    color: var(--color-text-muted) !important;
+    border-color: var(--color-text-muted) !important;
+    box-shadow: none !important;
+  }
+  input:focus,
+  .form-control:focus {
+    background-color: var(--color-surface-secondary) !important;
+    color: var(--color-text-muted) !important;
+    border-color: var(--color-text-muted) !important;
+    box-shadow: none !important;
+  }
+  button.nav-link {
+    color: var(--color-primary) !important;
+  }
+  button.nav-link:hover {
+    color: var(--color-secondary) !important;
+  }
+  button.nav-link.active {
+    background-color: var(--color-primary) !important;
+    color: var(--color-text-nav) !important;
+  }
+  .jumbotron .bg-primary,
+  .jumbotron .bg-secondary {
+    /* badges that show team name/country in user profile */
+    background-color: var(--color-badge-bg) !important;
+    color: var(--color-badge-text) !important;
+  }
+  .nav-tabs {
+    border-bottom-color: var(--color-primary) !important;
+  }
+  .nav-tabs .nav-link {
+    background-color: transparent !important;
+    border-color: transparent !important;
+    color: var(--color-text-body) !important;
+  }
+  .nav-tabs .nav-link:hover {
+    background-color: transparent !important;
+    border-color: var(--color-primary) !important;
+    color: var(--color-text-body) !important;
+  }
+  .nav-tabs .active {
+    background-color: var(--color-primary) !important;
+    border-color: var(--color-primary) !important;
+    color: var(--color-text-nav) !important;
+  }
+  .nav-tabs .active:hover {
+    background-color: var(--color-primary) !important;
+    border-color: var(--color-primary) !important;
+    color: var(--color-text-nav) !important;
+  }
+  .navbar-dark .navbar-toggler {
+    color: var(--color-text-nav) !important;
+    border: none !important;
+    border-color: transparent !important;
+  }
+  .navbar-dark .navbar-toggler-icon {
+    /* mobile navbar toggle icon color override */
+    background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%280, 0, 0, 1.0%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+  }
+  a {
+    /* disable smooth transitions for links */
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -o-transition: none !important;
+    transition: none !important;
+  }
+  .navbar .navbar-brand,
+  .navbar .nav-item,
+  .navbar .nav-link {
+    color: var(--color-text-nav) !important;
+    font-weight: bold !important;
+  }
+  .navbar .navbar-brand:hover,
+  .navbar .nav-item:hover,
+  .navbar .nav-link:hover {
+    color: var(--color-text-nav-hover) !important;
+  }
+  ul {
+    margin: 0;
+  }
+  ul.dashed {
+    list-style-type: none;
+  }
+  ul.dashed > li {
+    text-indent: -5px;
+  }
+  ul.dashed > li:before {
+    content: "-";
+    text-indent: -5px;
+  }
+  .modal-content .nav-link:hover {
+    cursor: pointer; /* core-beta fix */
+  }
+  #score-graph {
+    background-color: #ffffff;
+    border-radius: 20px;
+  }
+
+  .challenge-button {
+    position: relative;
+  }
+
+  button.challenge-button::after {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    padding: 0.25em 0.4em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+    background-color: #5b7290 !important;
+    color: #000000;
+  }
+
+  button.challenge-button.tag-beginner::after {
+    content: "beginner";
+    background-color: var(--color-beginner-tag) !important;
+  }
+
+  button.challenge-button.tag-easy::after {
+    content: "easy";
+    background-color: var(--color-easy-tag) !important;
+  }
+
+  button.challenge-button.tag-medium::after {
+    content: "medium";
+    background-color: var(--color-medium-tag) !important;
+  }
+  button.challenge-button.tag-hard::after {
+    content: "hard";
+    background-color: var(--color-hard-tag) !important;
+  }
+  button.challenge-button.tag-extreme::after {
+    content: "extreme";
+    background-color: var(--color-extreme-tag) !important;
+  }
+  .panel { 
+    background-color: var(--color-surface-primary);
+    border: 2px solid #333333;
+    border-radius: 0.75rem;
+    padding: 1rem;
+  }
+</style>
+
+</head>
+<body>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+  <div class="container">
+    <a href="/" class="navbar-brand">
+      
+        Fall CTF 2025
+      
+    </a>
+
+    <button
+        class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#base-navbars"
+        aria-controls="base-navbars" aria-expanded="false" aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="base-navbars">
+      <ul class="navbar-nav me-auto">
+        
+
+        
+          <li class="nav-item">
+            <a class="nav-link" href="/users">
+              Users
+            </a>
+          </li>
+
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/teams">
+                Teams
+              </a>
+            </li>
+          
+        
+
+        
+          <li class="nav-item">
+            <a class="nav-link" href="/scoreboard">
+              Scoreboard
+            </a>
+          </li>
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/challenges">
+            Challenges
+          </a>
+        </li>
+      </ul>
+
+      <hr class="d-sm-flex d-md-flex d-lg-none">
+
+      <ul class="navbar-nav ms-md-auto d-block d-sm-flex d-md-flex">
+        
+
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/register">
+                <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Register">
+                  <i class="fas fa-user-plus d-none d-md-inline d-lg-none"></i>
+                </span>
+                <span class="d-sm-inline d-md-none d-lg-inline">
+                  <i class="fas fa-user-plus pe-1"></i>
+                  Register
+                </span>
+              </a>
+            </li>
+          
+
+          <li class="nav-item">
+            <a class="nav-link" href="/login">
+              <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Login">
+                <i class="fas fa-sign-in-alt d-none d-md-inline d-lg-none"></i>
+              </span>
+              <span class="d-sm-inline d-md-none d-lg-inline">
+                <i class="fas fa-sign-in-alt pe-1"></i>
+                Login
+              </span>
+            </a>
+          </li>
+        
+
+        <li class="nav-item dropdown">
+          <button class="nav-link dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-language d-none d-md-inline"></i>
+            <span class="d-sm-inline d-md-none">
+              <i class="fas fa-language pe-1"></i>
+              Change language
+            </span>
+          </button>
+          <form x-data="LanguageForm">
+            <ul class="dropdown-menu dropdown-menu-end">
+              
+              <li>
+                  <span class="dropdown-item bg-primary text-white" @click="set" value="en">
+                    English
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="de">
+                    Deutsch
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="pl">
+                    Polski
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="es">
+                    Español
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="ar">
+                    اَلْعَرَبِيَّةُ
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="zh_CN">
+                    简体中文
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="zh_TW">
+                    繁體中文
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="fr">
+                    Français
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="ko">
+                    한국어
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="ru">
+                    русский язык
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="pt_BR">
+                    Português do Brasil
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="sk">
+                    Slovenský jazyk
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="ja">
+                    日本語
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="it">
+                    Italiano
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="vi">
+                    tiếng Việt
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="ca">
+                    Català
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="el">
+                    Ελληνικά
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="fi">
+                    Suomi
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="ro">
+                    Română
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="sl">
+                    Slovenščina
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="sv">
+                    Svenska
+                  </span>
+              </li>
+            </ul>
+          </form>
+        </li>
+
+        <li class="nav-item">
+          <button class="nav-link theme-switch" type="button">
+            <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Toggle theme">
+              <i class="fas fa-sun d-none d-md-inline"></i>
+            </span>
+            <span class="d-sm-inline d-md-none">
+              <i class="fas fa-sun pe-1"></i>
+              Toggle theme
+            </span>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main role="main">
+  
+  <div class="container">
+    <div class="container" style="color-scheme: dark">
+  <style>
+    #tagline::before {
+      content: "> ";
+    }
+    #home {
+      /* min-height: 85vh; */
+    }
+    #home h1 {
+      font-size: 5rem;
+    }
+    #home h2 {
+      font-size: 2.5rem;
+    }
+    .max-w-prose {
+      max-width: 65ch;
+    }
+    .gap-4 {
+      gap: 1rem;
+    }
+    .flex {
+      display: flex;
+    }
+    .flex-col {
+      flex-direction: column;
+    }
+    @media (min-width: 768px) {
+      .md\:gap-16 {
+        gap: 4rem;
+      }
+    }
+    @media (min-width: 768px) {
+      .md\:flex-row {
+        flex-direction: row;
+      }
+    }
+    @media (min-width: 768px) {
+      .md\:max-w-none {
+        max-width: none;
+      }
+    }
+    .text-center {
+      text-align: center;
+    }
+    .text-white {
+      --tw-text-opacity: 1;
+      color: rgb(255 255 255 / var(--tw-text-opacity));
+    }
+    .gap-8 {
+      gap: 2rem;
+    }
+    .items-center {
+      align-items: center;
+    }
+    .select-none {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+    .max-w-64 {
+      max-width: 16rem;
+    }
+    .mx-auto {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .my-20 {
+      margin-top: 5rem;
+      margin-bottom: 5rem;
+    }
+    .pointer-events-none {
+      pointer-events: none;
+    }
+    details {
+      position: relative;
+      border-bottom: 1px solid #555555;
+    }
+    details:last-child {
+      border: none;
+    }
+    details summary {
+      padding-left: 2rem;
+      padding-right: 1rem;
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+      list-style-type: none;
+      cursor: pointer;
+      background-color: #222222;
+      overflow: hidden;
+    }
+    details summary:hover {
+      background-color: #333333;
+    }
+    details summary::-webkit-details-marker {
+      display: none;
+    }
+    details div {
+      padding-left: 2rem;
+      padding-right: 1rem;
+      padding-top: 0.25rem;
+      padding-bottom: 1rem;
+      background-color: #222222;
+    }
+    details:first-child summary {
+      border-top-left-radius: 0.75rem;
+      border-top-right-radius: 0.75rem;
+    }
+    details:last-child:not([open]) summary {
+      border-bottom-left-radius: 0.75rem;
+      border-bottom-right-radius: 0.75rem;
+    }
+    details:last-child[open] div {
+      border-bottom-left-radius: 0.75rem;
+      border-bottom-right-radius: 0.75rem;
+    }
+    summary:focus {
+      outline: none;
+    }
+    summary:focus-visible {
+      box-shadow: var(--tw-ring-inset) 0 0 0
+        calc(3px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+      --tw-ring-inset: inset;
+      --tw-ring-color: rgb(255 255 255);
+    }
+    summary:before {
+      content: "";
+      border-width: 0.4rem;
+      border-style: solid;
+      border-color: transparent transparent transparent #fff;
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      transform: rotate(0);
+      transform-origin: 0.2rem 50%;
+      transition: 0.2s transform ease;
+    }
+    details[open] > summary:before {
+      transform: rotate(90deg);
+    }
+  </style>
+  <section id="home" class="position-relative w-100">
+    <div class="container">
+      <div class="row">
+        <div class="col mt-5 text-center">
+          <h1 class="mt-5">Fall CTF 2025</h1>
+          <h2 id="tagline"></h2>
+        </div>
+      </div>
+      <!--<div class="row mt-2">
+                <div class="col-sm-6 col-md-4 col-lg-3 mx-auto">
+                    <svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 361.23 382.47" style="">
+                        <defs>
+                            <style>.cls-1,.cls-2{fill:#ffc000;}.cls-2{stroke:#ffc000;stroke-linejoin:round;stroke-width:4px;}</style>
+                        </defs>
+                        <g id="Neck_Bot">
+                            <path d="M168.81,377.93c-40.5-1.84-79.63-17.36-110.39-43.78-.37-.5-.86-.93-1.42-1.25-.68-.38-1.44-.57-2.19-.57-.82,0-1.64,.22-2.36,.67l-22.2,13.7c-7.97-6.05-15.47-12.77-22.35-20.03-2.12-14.04-3.26-28.33-3.38-42.54,12.55-2.66,25.39-4,38.22-4,1.7,0,3.42,.02,5.13,.07,22.76,24.82,53.53,41.16,86.87,46.09,.22,.03,.44,.05,.66,.05,1.42,0,2.77-.67,3.63-1.83l8.45-11.5,42.03-2.87,9.51,5.09c.66,.36,1.39,.53,2.12,.53,.79,0,1.58-.21,2.29-.62,8.72-5.15,16.46-11.58,23.06-19.18,8.36,11.34,18.24,21.34,29.49,29.83-25.91,22.31-55.2,39.85-87.16,52.17Z"></path>
+                            <path class="cls-1" d="M42.73,284.63c1.04,0,2.08,0,3.12,.03,23.31,24.78,54.49,41.1,88.21,46.08,.44,.07,.88,.1,1.32,.1,2.84,0,5.54-1.34,7.25-3.67l7.22-9.82,38.66-2.64,8.37,4.48c1.33,.71,2.79,1.07,4.25,1.07,1.58,0,3.17-.42,4.57-1.25,7.56-4.46,14.4-9.84,20.46-16.07,6.72,8.46,14.3,16.14,22.68,22.97-24.23,20.1-51.35,36.05-80.77,47.5-39.02-1.99-76.69-16.99-106.4-42.38-.69-.81-1.52-1.5-2.48-2.04-1.36-.76-2.88-1.14-4.39-1.14-1.64,0-3.28,.45-4.73,1.34l-19.55,12.06c-6.5-5.11-12.66-10.69-18.39-16.64-1.78-12.16-2.81-24.5-3.07-36.8,11.09-2.11,22.38-3.18,33.67-3.18m0-9c-14.38,0-28.71,1.64-42.73,4.89-.05,16.14,1.17,32.27,3.66,48.22,8.03,8.6,16.85,16.44,26.34,23.4l24.81-15.3v.15c31.98,27.74,72.44,43.78,114.74,45.49,34.42-13.15,66.15-32.48,93.62-57.04-14.32-9.96-26.67-22.48-36.44-36.93-6.98,9.16-15.68,16.89-25.6,22.75l-10.65-5.7-45.4,3.1-9.69,13.19c-33-4.88-63.25-21.18-85.47-46.07-2.39-.09-4.79-.14-7.18-.14h0Z"></path>
+                        </g>
+                        <g id="Neck_Mid">
+                            <path d="M137.57,293.33c-2.44-.33-4.87-.73-7.26-1.19-14.97-2.83-29.26-8.1-42.49-15.65-15.64-8.96-29.21-20.71-40.33-34.9-.87-1.11-2.18-1.72-3.54-1.72-.43,0-.87,.06-1.3,.19-1.77,.54-3.04,2.1-3.19,3.95l-.03,.41c-1.1,.05-2.19,.08-3.28,.08-9.8,0-19.56-2.18-28.42-6.34,1.11-7.7,2.48-15.12,4.07-22.11,6.02-3,12.27-5.67,18.6-7.96,1.4-.51,2.47-1.68,2.83-3.13,2.46-9.72,5.45-19.41,8.91-28.84,4.85,.14,9.67,.82,14.37,2.02,1.11,.28,2.21,.59,3.29,.94,.44,2.1,.95,4.22,1.55,6.39,.11,.79,.26,1.59,.42,2.42l.11,.58c1.68,8.84,4.65,17.34,8.82,25.29h0c.07,.21,.16,.41,.25,.59,14.02,26.38,40.06,44.5,69.67,48.48,.2,.03,.4,.04,.6,.04,1.13,0,2.24-.43,3.08-1.22l2.7-2.53,38.65-2.62c.21,.32,1.23,1.89,1.23,1.89,.84,1.29,2.27,2.04,3.77,2.04,.33,0,.66-.04,.99-.11,4.77-1.08,9.52-2.41,14.17-3.97,1.9,5.71,4.19,11.31,6.84,16.72-5.52,5.01-11.66,9.24-18.32,12.62l-4.45-2.02c-.59-.27-1.22-.4-1.86-.4-.1,0-.2,0-.3,.01l-42.88,2.9c-1.32,.09-2.54,.76-3.32,1.82l-3.93,5.34Z"></path>
+                            <path class="cls-1" d="M45.22,180.79c3.43,.28,6.84,.85,10.19,1.71,.19,.05,.37,.1,.56,.14,.29,1.23,.6,2.48,.94,3.74,.12,.82,.27,1.6,.41,2.35l.11,.59c1.74,9.16,4.81,17.99,9.12,26.25,.12,.3,.26,.59,.41,.88,14.7,27.66,42,46.66,73.04,50.83,.4,.05,.8,.08,1.2,.08,2.27,0,4.47-.86,6.15-2.43l1.53-1.43,34.42-2.33c1.71,2.39,4.45,3.77,7.32,3.77,.66,0,1.32-.07,1.99-.22,3.48-.79,6.95-1.7,10.38-2.75,1.24,3.37,2.61,6.69,4.11,9.95-4.01,3.34-8.34,6.27-12.93,8.76l-2.44-1.11c-1.17-.53-2.44-.81-3.72-.81-.2,0-.41,0-.61,.02l-42.88,2.9c-2.64,.18-5.07,1.51-6.64,3.64l-2.33,3.16c-1.48-.23-2.95-.49-4.4-.76-14.47-2.74-28.3-7.83-41.08-15.13-15.14-8.68-28.27-20.04-39.04-33.77-1.74-2.21-4.37-3.45-7.09-3.45-.86,0-1.74,.12-2.59,.38-2.29,.69-4.16,2.24-5.27,4.25-8,0-15.98-1.58-23.39-4.58,.88-5.62,1.89-11.06,3.03-16.28,5.28-2.54,10.71-4.83,16.21-6.82,2.81-1.02,4.93-3.36,5.66-6.26,2.15-8.5,4.71-16.97,7.64-25.27m-5.04-9.21c-.39,0-.78,0-1.17,0-4,10.55-7.39,21.32-10.15,32.26-7.1,2.57-14.02,5.58-20.74,9.01l-.23,.13c-2.16,9.12-3.82,18.44-5.06,27.75,10.3,5.44,21.74,8.25,33.32,8.25,2.49,0,4.98-.13,7.47-.39,.1-1.42,.22-2.79,.33-4.24,11.43,14.59,25.57,26.82,41.65,36.03,13.63,7.78,28.46,13.24,43.88,16.16,3.35,.64,6.73,1.16,10.15,1.57l5.5-7.47,42.88-2.9,6.38,2.9c8.79-4.19,16.83-9.8,23.78-16.62-3.91-7.5-7.08-15.37-9.47-23.49-5.89,2.2-11.93,3.99-18.06,5.38-.41-.62-2.31-3.57-2.67-4.11l-42.88,2.9-3.87,3.63c-28.24-3.79-52.92-20.97-66.29-46.13v-.07c-.06-.11-.12-.22-.16-.33-4.01-7.59-6.87-15.74-8.47-24.18-.19-1.02-.38-1.96-.51-2.9v-.09c-.81-2.96-1.51-5.93-2.07-8.98-1.99-.75-4.03-1.38-6.09-1.9-5.7-1.45-11.55-2.19-17.42-2.19h0Z"></path>
+                        </g>
+                        <g id="Neck_Top">
+                            <path d="M139.65,235.58c-7.5-3.95-14.53-8.74-20.94-14.28-.99-.86-2.29-2-3.46-3.11-.73-.67-1.28-1.2-1.79-1.72l-1.49-1.49c-17.4-17.73-28.43-41.14-31.04-65.89-.24-2.26-2.13-3.99-4.4-4.03-6.31-.11-12.65-.75-18.86-1.92-3.78-5.09-7.12-10.51-9.97-16.17,.48-.78,.97-1.56,1.48-2.37l.11-.17c4.7-7.69,10-15.48,15.8-23.23,4.9-1.49,9.91-2.77,14.89-3.82,1.2-.25,2.25-.99,2.9-2.03,8.9-14.31,21.01-26.49,35.25-35.48,1.75,4.86,3.15,9.85,4.19,14.91-.61,1.09-1.19,2.17-1.73,3.24-.85,1.55-1.6,3.12-2.34,4.65-13,27.84-14.92,59.22-5.43,88.39,.15,.45,.36,.88,.64,1.26,10.16,13.94,23.46,25.71,38.53,34.11,.46,.45,1.02,.81,1.67,1.04l.63,.22c.49,.17,.99,.25,1.49,.25,.23,0,.46-.02,.68-.05,.41,.04,1.96,.2,1.96,.2,3.59,.32,7.18,.48,10.72,.48h0c11.87,0,23.56-1.72,34.85-5.13-2.48,9.44-3.46,19.28-2.89,29.01-2.15,.78-4.34,1.5-6.54,2.14l-2.83-4.38c-.83-1.29-2.26-2.06-3.78-2.06-.1,0-.21,0-.31,.01l-41.72,2.9c-1.04,.07-2.01,.5-2.77,1.21l-3.5,3.29Z"></path>
+                            <path class="cls-1" d="M115.7,66.92c.7,2.37,1.33,4.76,1.86,7.17-.33,.62-.66,1.23-.97,1.85-.89,1.63-1.7,3.31-2.41,4.79-.01,.03-.03,.06-.04,.09-13.46,28.83-15.45,61.38-5.61,91.64,.29,.9,.73,1.75,1.29,2.52,10.44,14.32,24.08,26.44,39.53,35.14,.81,.68,1.76,1.23,2.81,1.6l.28,.1c1.12,.46,2.32,.7,3.53,.7,.32,0,.63-.02,.94-.05l.35,.03,.7,.07s.07,0,.11,.01c3.67,.32,7.39,.49,11.07,.49,9.78,0,19.43-1.13,28.86-3.36-1.16,6.44-1.68,13-1.53,19.54l-.96-1.49c-1.67-2.57-4.52-4.11-7.55-4.11-.21,0-.42,0-.63,.02l-41.72,2.9c-2.07,.14-4.03,1-5.54,2.42l-1.12,1.06c-6.15-3.47-11.94-7.55-17.28-12.16-.96-.83-2.2-1.92-3.31-2.98-.04-.04-.09-.08-.13-.12-.6-.54-1.09-1.02-1.55-1.49-.02-.02-.05-.05-.07-.07l-1.42-1.42c-16.7-17.04-27.28-39.48-29.78-63.21-.48-4.52-4.25-7.98-8.8-8.05-5.47-.09-10.96-.61-16.36-1.53-2.71-3.78-5.18-7.75-7.37-11.85l.1-.16,.11-.18s.05-.08,.08-.12c4.35-7.12,9.27-14.39,14.64-21.63,4.32-1.27,8.72-2.38,13.1-3.3,2.4-.5,4.5-1.97,5.79-4.06,7.51-12.09,17.42-22.59,29-30.81m4.7-13.64c-16.88,9.57-31.1,23.22-41.34,39.7-5.62,1.18-11.18,2.63-16.68,4.35-5.8,7.67-11.6,16.04-16.89,24.69-1,1.58-1.99,3.13-2.9,4.73,3.45,7.24,7.65,14.1,12.53,20.47,7.03,1.43,14.17,2.21,21.34,2.34,2.73,25.86,14.12,50.04,32.33,68.6l1.45,1.45c.62,.64,1.25,1.23,1.91,1.84,1.16,1.1,2.41,2.2,3.61,3.25,7.49,6.47,15.78,11.96,24.66,16.32l5.8-5.45,41.72-2.9,4.63,7.15c4.51-1.17,8.94-2.62,13.27-4.35-1.3-13.28,.45-26.67,5.12-39.17-13.38,5.15-27.56,7.78-41.83,7.78-3.42,0-6.85-.15-10.27-.45-1.15-.12-2.26-.22-3.38-.36,.1,.05,.19,.13,.29,.19l.19,.07c-.06,0-.13-.03-.19-.07l-.63-.22c.06,0,.12,.01,.17,.01s.12,0,.17-.01c-15.14-8.18-28.26-19.65-38.4-33.55-9.1-27.99-7.24-58.38,5.21-85.05,.73-1.51,1.47-3.05,2.26-4.5,.78-1.55,1.64-3.1,2.49-4.55-1.45-7.64-3.68-15.11-6.66-22.3h0Z"></path>
+                        </g>
+                        <g id="Head">
+                            <path d="M315.53,244.56c-12.43,0-24.87-2.81-36.09-8.15-12.35-29.2-39.24-50.46-70.59-55.66-3.38-.55-7.45-.83-12.11-.83-6.05,0-12.95,.48-19.14,1.31-23.25-10.97-33.25-24.15-37.55-33.52-.31-4.2-.28-9.18-.25-14.44,.06-9.85,.11-20.01-1.97-27.95,2.43-14.78,7.73-28.64,15.76-41.26,4.75-.87,9.58-1.43,14.39-1.68,2.02-.1,3.72-1.54,4.16-3.51,2.07-9.28,5.67-18.09,10.69-26.17,1.82-2.95,3.84-5.8,6.01-8.48,2.88-3.55,6.07-6.89,9.5-9.92,.6-.53,1.2-1.05,1.81-1.57,1.41,12.78,1.02,25.66-1.18,38.38-.25,1.42,.2,2.87,1.21,3.9,.85,.88,2.02,1.37,3.23,1.37,.21,0,.42-.01,.64-.04,6.37-.91,12.86-1.37,19.29-1.37,1.78,0,3.58,.04,5.35,.1,.06,0,.12,0,.18,0,1.49,0,2.89-.74,3.73-1.98,7.23-10.71,18.42-18.21,30.9-20.98-5.44,12.08-8.26,25.25-8.21,38.55,0,1.42,.68,2.76,1.82,3.6,.78,.58,1.72,.88,2.68,.88,.44,0,.87-.06,1.3-.19,13.96-4.21,31.75-9.42,48.95-14.47,7.4-2.17,14.92-4.37,22.18-6.51-3.39,2.28-6.86,4.58-10.3,6.86-11.92,7.92-24.26,16.1-32.79,22.93-.92,.76-2.25,1.82-3.59,2.88-1.39,1.1-2.79,2.2-3.69,2.95l-3.06,2.43c-1.05,.83-1.67,2.09-1.7,3.43-.03,1.34,.54,2.62,1.56,3.5,1.66,1.43,3.35,2.81,5.06,4.13-1.26,11.36-.92,22.8,1.03,34.07,.1,.56,.3,1.11,.6,1.59,0,0,4.8,7.8,7.13,11.66,6.8,11.29,14.58,22.11,23.15,32.13,.04,.05,.09,.1,.13,.15,.95,1.02,1.89,2.01,2.79,2.97,9.85,10.45,15.81,16.76,16.42,31.45,0,6.22-3.94,13.14-7.74,19.82-1.35,2.38-2.74,4.82-3.95,7.24-2.57,.24-5.16,.36-7.72,.36h0Z"></path>
+                            <path class="cls-1" d="M196.37,22.46c.37,9.31-.24,18.65-1.84,27.9-.49,2.84,.41,5.74,2.41,7.8,1.71,1.76,4.04,2.73,6.46,2.73,.42,0,.85-.03,1.27-.09,6.16-.88,12.44-1.32,18.66-1.32,1.72,0,3.46,.03,5.18,.1,.12,0,.24,0,.35,0,2.98,0,5.78-1.48,7.46-3.96,4.87-7.21,11.7-12.82,19.52-16.27-3.37,10.07-5.1,20.66-5.06,31.34,0,2.84,1.36,5.51,3.64,7.2,1.57,1.16,3.45,1.77,5.36,1.77,.87,0,1.74-.13,2.6-.38,12.31-3.71,27.61-8.21,42.85-12.68-7.06,4.8-13.67,9.47-18.92,13.67-.05,.04-.09,.08-.14,.11-.78,.65-2.13,1.72-3.44,2.75-1.42,1.12-2.77,2.19-3.73,2.98l-3.03,2.4c-2.1,1.67-3.35,4.18-3.4,6.86-.05,2.68,1.09,5.25,3.12,7,1.08,.93,2.17,1.84,3.28,2.73-1,10.95-.56,21.97,1.32,32.83,.2,1.13,.6,2.21,1.21,3.19,.05,.08,4.82,7.83,7.1,11.61,6.93,11.51,14.86,22.53,23.58,32.74,.08,.1,.17,.2,.26,.29,.96,1.03,1.9,2.02,2.81,2.99,9.42,9.99,14.63,15.51,15.2,28.45-.05,5.02-3.66,11.37-7.15,17.51-.96,1.7-1.95,3.42-2.88,5.17-1.63,.1-3.26,.15-4.88,.15-11.2,0-22.42-2.42-32.64-7.01-13.25-29.78-41.02-51.38-73.33-56.74-3.6-.58-7.92-.88-12.82-.88-5.81,0-12.37,.42-18.4,1.18-20.6-9.98-29.77-21.58-33.86-30.03-.24-3.86-.21-8.44-.19-13.26,.05-9.76,.11-19.82-1.87-28.15,2.28-13.18,6.96-25.6,13.92-37,3.93-.64,7.91-1.07,11.87-1.28,4.04-.21,7.44-3.08,8.32-7.03,1.96-8.79,5.36-17.12,10.13-24.8,1.71-2.77,3.62-5.46,5.67-8,1.28-1.58,2.63-3.12,4.03-4.6m7.18-17.96c-2.86,1.98-5.6,4.13-8.2,6.44-3.62,3.2-6.97,6.7-10.01,10.46-2.3,2.84-4.42,5.82-6.34,8.94-5.27,8.49-9.08,17.81-11.26,27.56-5.67,.3-11.32,1-16.89,2.12-9.08,13.75-15.09,29.3-17.62,45.58,3.42,11.69,1.32,30.75,2.39,43.26,10.73,24.47,39.78,36.13,41.24,37.03,5.64-.83,12.98-1.46,19.87-1.46,4.1,0,8.04,.22,11.37,.77,30.58,5.07,56.29,25.74,67.82,54.51,12.34,6.17,25.9,9.35,39.6,9.35,3.57,0,7.14-.22,10.71-.65,4.35-9.75,13.24-20.64,13.2-31.36-.73-17.93-9.08-25.23-20.42-37.4-8.43-9.87-16.03-20.42-22.72-31.54-2.34-3.87-7.15-11.69-7.15-11.69-2.02-11.68-2.25-23.59-.68-35.34-2.36-1.74-4.69-3.6-6.9-5.51l3.1-2.47c1.74-1.45,5.51-4.35,7.25-5.8,16.73-13.37,48.06-31.91,64.81-45.29-27.71,8.34-69.28,20.31-96.96,28.65-.05-15.47,3.95-30.69,11.6-44.14-17.16,.91-32.9,9.82-42.52,24.07-1.84-.07-3.69-.11-5.53-.11-6.67,0-13.32,.47-19.93,1.41,2.71-15.68,2.76-31.7,.15-47.39h0Z"></path>
+                        </g>
+                        <path id="Nose" class="cls-2" d="M301.62,222.09c-2.07-1.04-7.98,2.77-7.98,2.77l11.45,7.25,9.36,1.38c-.35-1.48-10.75-10.42-12.82-11.4Z"></path>
+                        <path id="Eye" class="cls-2" d="M223.63,126.79c-6.92-6.18-24.66-6.31-24.66-6.31l13.52,15.61,22.88,7.25s-4.8-10.37-11.74-16.55Z"></path>
+                    </svg>
+                </div>
+            </div>-->
+      <div class="row text-center">
+        <div class="d-block py-5">
+          <a
+            target="_blank"
+            rel="noopener"
+            class="btn btn-primary btn-lg mx-1"
+            href="https://sigpwny.com/discord"
+            title="Discord"
+          >
+            <i class="fa-brands fa-discord"></i>
+            <strong>Discord</strong>
+          </a>
+          <a
+            target="_blank"
+            rel="noopener"
+            class="btn btn-primary btn-lg mx-1"
+            href="https://notes.sigpwny.com/guides/fallctf-2025"
+          >
+            <i class="fa-solid fa-book"></i>
+            <strong>Guide</strong>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="about" class="larger-text d-flex flex-column gap-3">
+    <div class="d-flex flex-row justify-content-center">
+      <div class="w-100 max-w-prose">
+        <h2 id="what">What</h2>
+        <div class="panel">
+          <p>
+            Fall CTF is a 6-hour hacking competition for UIUC students hosted by
+            <a href="https://sigpwny.com/" target="_blank" rel="noopener"
+              >SIGPwny</a
+            >. UIUC students of all backgrounds are welcome, including
+            beginners! There will be challenges related to web hacking, reverse
+            engineering, binary exploitation, and more! Plus, free food, free
+            swag, and companies! Come learn and have fun with us!
+          </p>
+          <p class="mb-0">
+            <a
+              href="https://forms.gle/6QYpaZ9jiZMLboD5A"
+              target="_blank"
+              rel="noopener"
+              >Register now</a
+            >
+            to get a free shirt and free pizza at Fall CTF! The first 250
+            registered attendees to show up will also get a free electronic PCB
+            badge!
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex flex-row justify-content-center">
+      <div class="flex flex-col gap-4 md:flex-row max-w-prose w-100">
+        <div class="w-100 flex flex-column">
+          <h2>When/Where</h2>
+          <div class="w-100 h-100 panel">
+            <p class="mb-0">
+              Sunday, September 21st<br />
+              12–6 PM<br />
+              <a
+                href="https://maps.app.goo.gl/a9mMhgVjAHEYLGWU8"
+                target="_blank"
+                rel="noopener"
+                >Campus Instructional Facility</a
+              >, room 3039/3031
+            </p>
+          </div>
+        </div>
+        <div class="w-100 flex flex-column">
+          <h2>Schedule</h2>
+          <div class="w-100 h-100 flex flex-row flex-grow-1 panel">
+            <table>
+              <tbody>
+                <tr>
+                  <td style="text-align: end">11:30 AM</td>
+                  <td style="white-space: pre">-</td>
+                  <td>Doors open</td>
+                </tr>
+                <tr>
+                  <td style="text-align: end">11:45 AM</td>
+                  <td style="white-space: pre">-</td>
+                  <td>Opening Ceremony</td>
+                </tr>
+                <tr>
+                  <td style="text-align: end">12:00 PM</td>
+                  <td style="white-space: pre">-</td>
+                  <td>CTF starts</td>
+                </tr>
+                <tr>
+                  <td style="text-align: end">1:00 PM</td>
+                  <td style="white-space: pre">-</td>
+                  <td>Pizza time! 🍕</td>
+                </tr>
+                <tr>
+                  <td style="text-align: end">6:00 PM</td>
+                  <td style="white-space: pre">-</td>
+                  <td>CTF ends</td>
+                </tr>
+                <tr>
+                  <td style="text-align: end">6:15 PM</td>
+                  <td style="white-space: pre">-</td>
+                  <td>Closing Ceremony</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex flex-row justify-content-center">
+      <div class="d-flex flex-column max-w-prose w-100">
+        <h2>What to Bring</h2>
+        <div class="panel">
+          <ul class="mb-0">
+            <li>Yourself and a teammate!</li>
+            <li>Laptop and charger</li>
+            <li>A USB-C cable (with data transfer support) for the badge</li>
+            <li>(Optional) Prepare a PDF resume for sponsors</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex flex-row justify-content-center">
+      <div class="d-flex flex-column max-w-prose w-100">
+        <h2>Rules</h2>
+        <div class="panel">
+          <ol class="mb-0">
+            <li>No sharing flags or solutions.</li>
+            <li>No attacking infrastructure (brute forcing the flag submission is not allowed).</li>
+            <li>No sabotaging other teams.</li>
+            <li>Teams are limited to two players each.</li>
+            <li>
+              Teams that meet the requirements for the Advanced division must
+              play in the Advanced division.
+            </li>
+            <li>
+              Unless specified otherwise, the flag format is
+              <code>fallctf{*}</code>.
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex flex-row justify-content-center">
+      <div class="d-flex flex-column max-w-prose w-100">
+        <h2>Divisions</h2>
+        <div class="flex flex-col md-root panel">
+          <p>
+            The competition is divided into a Beginner and Advanced division to
+            fairly distribute prizes. There are no differences in challenges or
+            challenge difficulty between divisions—all challenges are
+            designed to be approached by beginners.
+          </p>
+          <div>
+            <h3>Beginner Division</h3>
+            <p>
+              The beginner division is intended for underclassmen students who
+              do not have much experience with CTFs, cybersecurity, or even
+              computer science! We require teams with experience to compete in
+              the Advanced division instead.
+            </p>
+          </div>
+          <div>
+            <h3>Advanced Division</h3>
+            <p>If either you or your teammate:</p>
+            <ul>
+              <li>
+                Has taken CS 341 (previously CS 241), ECE 391, or an equivalent
+                systems programming course
+              </li>
+              <li>Is a graduate student</li>
+              <li>Has previously played Fall CTF</li>
+              <li>Has played in three or more CTFs</li>
+            </ul>
+            <br />
+            <p class="mb-0">
+              ... then your team should be registered in the Advanced division.
+              If you have some experience and would like to compete in the
+              Advanced division, you can also choose to opt-in!
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex flex-row justify-content-center">
+      <div class="d-flex flex-column max-w-prose w-100">
+        <h2>Prizes</h2>
+        <div class="flex flex-col md-root panel">
+          <ul class="pb-2">
+            <li>4x YubiKey 5c NFC</li>
+            <li>2x NordVPN Basic 1 Year + Binary Ninja Personal license</li>
+            <li>2x Sparrows Spirit Set + Cut Away Lock</li>
+            <li>4x Keychron K6 keyboard (brown switches)</li>
+            <li>4x Amazon Gift Card</li>
+            <li>2x HTB Academy Gift Card</li>
+            <li>2x Orange PI 4GB Ram</li>
+          </ul>
+          <h3>Prize Distribution</h3>
+          <p>
+            The top 5 teams in each division are eligible for prizes. Each
+            winning team may select two prize options with the following
+            priority:
+          </p>
+          <ul class="pb-2">
+            <li>1st place Advanced Division</li>
+            <li>1st place Beginner Division</li>
+            <li>2nd place Advanced Division</li>
+            <li>2nd place Beginner Division</li>
+            <li>3rd place Advanced Division</li>
+            <li>3rd place Beginner Division</li>
+            <li>4th place Advanced Division</li>
+            <li>4th place Beginner Division</li>
+            <li>5th place Advanced Division</li>
+            <li>5th place Beginner Division</li>
+          </ul>
+          <!--<p class="p-0"><strong>Disclaimer:</strong> SIGPwny does not condone illegal activities by distributing these prizes. They are intended for educational purposes only.</p>-->
+        </div>
+      </div>
+    </div>
+    <div class="d-flex flex-row justify-content-center">
+      <div class="d-flex flex-column max-w-prose w-100">
+        <h2>Frequently Asked Questions</h2>
+        <div class="flex flex-col md-root rounded-xl">
+          <details>
+            <summary>Where do I ask for help?</summary>
+            <div>Join our
+           	  <a
+                href="https://sigpwny.com/discord"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Discord</a
+              > and open in a ticket in #fall-2025-open-a-ticket</div>
+          </details>
+          <details>
+            <summary>What is a "capture the flag" (CTF) competition?</summary>
+            <div>
+              CTFs are cybersecurity competitions where teams solve hacking
+              challenges to find a "flag," usually a formatted string. Flags can
+              then be submitted to the competition platform for points. The more
+              flags you capture, the more points you get!
+            </div>
+          </details>
+          <details>
+            <summary>What if I'm new to cybersecurity?</summary>
+            <div>
+              Fall CTF is designed for you! Specifically, Fall CTF is meant to
+              be a fun learning experience for beginners rather than an intense
+              competition. We provide guides for each challenge category which
+              will teach you as you play. Additionally, we have a large number
+              of staff to help you in-person if you feel stuck.
+            </div>
+          </details>
+          <details>
+            <summary>
+              Are there any practice challenges? How can I prepare?
+            </summary>
+            <div>
+              You can find beginner-friendly challenges similar to Fall CTF on
+              <a
+                href="https://ctf.sigpwny.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Pwny CTF</a
+              >, which is SIGPwny's 24/7 internal CTF that runs alongside
+              <a
+                href="https://sigpwny.com/meetings/"
+                target="_blank"
+                rel="noopener noreferrer"
+                >club meetings</a
+              >.
+            </div>
+          </details>
+          <details>
+            <summary>Can I work with others?</summary>
+            <div class="flex flex-col gap-4">
+              <span
+                >Fall CTF can only be played in teams of up to two. We keep team
+                sizes small so that you have more opportunities to solve
+                challenges! We also ask that teams do not share flags or
+                solutions with each other. If you feel stuck, reach out to a
+                staff member.</span
+              >
+              <span
+                >On the day before the competition, we will be open team
+                registration on our competition platform. Feel free to find a
+                partner beforehand; otherwise, there will be plenty of
+                opportunities before and during the event to find and form
+                teams!</span
+              >
+            </div>
+          </details>
+          <details>
+            <summary>Help! How do I contact a staff member?</summary>
+            <div>
+              Join our
+              <a
+                href="https://sigpwny.com/discord"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Discord</a
+              >
+              to be able to ask your question online. We have a ticketing system
+              that you can use to privately message the Fall CTF team.
+              Additionally, you can ask anyone in-person wearing a badge with a
+              green lanyard for help.
+            </div>
+          </details>
+          <details>
+            <summary>How do tiebreaks work?</summary>
+            <div>
+              The leaderboard is first sorted by points. If any teams have the
+              same number of points, then the team who submitted their latest
+              flag earlier wins the tiebreak.
+            </div>
+          </details>
+          <details>
+            <summary>
+              I heard that companies will be attending. Do I need a resume?
+            </summary>
+            <div class="flex flex-col gap-4">
+              <span
+                >We will be offering a resume upload form as one of the
+                challenges during the event. Uploaded resumes will be provided
+                to our sponsors as a resume book. If you need help preparing a
+                resume, feel free to ask for advice in our
+                <a
+                  href="https://sigpwny.com/discord"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Discord</a
+                >
+                or take advantage of campus career resources!</span
+              >
+              <span
+                >Some of our sponsors will be attending in-person and will be
+                available to talk to during the event.</span
+              >
+            </div>
+          </details>
+          <details>
+            <summary>I'm not from UIUC. Can I play Fall CTF?</summary>
+            <div>
+              Currently, Fall CTF registration is limited to UIUC students. If
+              you are not from UIUC and wish to participate, please email
+              <a href="mailto:hello@sigpwny.com">hello@sigpwny.com</a> for a
+              manual review.
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+    <div class="my-20 text-center mx-auto max-w-prose w-100">
+      <p class="mb-8 w-100"><strong>Sponsored By</strong></p>
+<div class="container d-flex flex-column gap-4" style="min-width: 0; max-width: 100%;">
+<!-- John Deere -->
+<a target="_blank" rel="noopener noreferrer" href="https://www.deere.com/en/">
+<img src="https://raw.githubusercontent.com/sigpwny/websites/refs/heads/main/_global/content/profiles/org/john-deere/john-deere-dark.svg" alt="John Deere" />
+</a>
+
+<div class="gap-4 align-items-center" style="display: grid; grid-template-columns: 1fr 1fr;">
+  <!-- Battelle -->
+<a target="_blank" rel="noopener noreferrer" href="https://www.battelle.org/">
+<img src="https://raw.githubusercontent.com/sigpwny/websites/refs/heads/main/_global/content/profiles/org/battelle/battelle.svg" alt="Battelle" />
+</a>
+  <!-- REDLattice -->
+  <a target="_blank" rel="noopener noreferrer" href="https://www.redlattice.com/">
+<img src="https://raw.githubusercontent.com/sigpwny/websites/refs/heads/main/_global/content/profiles/org/redlattice/logo-light.svg" alt="REDLattice" />
+  </a>
+    </div>
+
+<!-- State Farm -->
+  <div class="w-50 mx-auto">
+  <a target="_blank" rel="noopener noreferrer" href="https://www.statefarm.com/">
+<img src="https://raw.githubusercontent.com/sigpwny/websites/refs/heads/main/_global/content/profiles/org/state-farm/state-farm.svg" alt="State Farm" />
+  </a>
+  </div>
+  
+<div class="gap-4 align-items-center" style="display: grid; grid-template-columns: 1fr 1fr;">
+  <!-- Espressif -->
+  <a target="_blank" rel="noopener noreferrer" href="https://www.espressif.com/">
+<img src="https://raw.githubusercontent.com/sigpwny/websites/refs/heads/main/_global/content/profiles/org/espressif/dark-wordmark.svg" alt="Espressif" />
+  </a>
+  <!-- Binary Ninja -->
+  <a target="_blank" rel="noopener noreferrer" href="https://binary.ninja/">
+<img src="https://raw.githubusercontent.com/sigpwny/websites/refs/heads/main/_global/content/profiles/org/binary-ninja/binary_ninja_horizontal_dark.svg" alt="Binary Ninja" />
+  </a>
+  <!-- SPARROWS -->
+  <!--<a target="_blank" rel="noopener noreferrer" href="https://www.sparrowslockpicks.com/">
+<img style="height: 100%; max-width: 100%; display: block; margin: auto;" src="https://raw.githubusercontent.com/sigpwny/websites/refs/heads/main/_global/content/profiles/org/sparrows/sparrows.png" alt="SPARROWS" />
+  </a>-->
+</div>
+
+</div>
+    </div>
+    <div class="mb-30 text-center mx-auto max-w-prose">
+      <p class="mb-8"><strong>Organized By</strong></p>
+      <div
+        class="flex flex-col md:flex-row gap-8 md:gap-16 mx-auto items-center text-white"
+      >
+        <!-- SIGPwny -->
+  <a target="_blank" rel="noopener noreferrer" href="https://sigpwny.com/">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1499.96 377.97" fill="#fff" class="max-w-128 w-100"><path d="M42.73,283.13c.6,0,1.21,0,1.82,0,23.68,24.75,55.11,41.05,89.08,46.07.59.09,1.17.13,1.76.13,3.78,0,7.39-1.79,9.67-4.89l6.39-8.7,36.41-2.49,7.61,4.07c1.77.95,3.72,1.42,5.66,1.42,2.11,0,4.22-.56,6.1-1.67,6.81-4.02,13.06-8.76,18.7-14.18,5.54,6.67,11.62,12.84,18.21,18.48-23.1,18.68-48.78,33.61-76.55,44.49-38.07-2.08-74.78-16.74-103.79-41.49-.88-1-1.94-1.85-3.14-2.52-1.82-1.02-3.83-1.52-5.85-1.52-2.19,0-4.37.6-6.3,1.79l-17.76,10.96c-5.54-4.47-10.82-9.27-15.78-14.37-1.55-10.89-2.5-21.91-2.83-32.92,10.1-1.77,20.35-2.67,30.6-2.67M42.73,271.13c-14.38,0-28.71,1.64-42.73,4.89-.05,16.14,1.17,32.27,3.66,48.22,8.03,8.6,16.85,16.44,26.34,23.4l24.81-15.3v.15c31.98,27.74,72.44,43.78,114.74,45.49,34.42-13.15,66.15-32.48,93.62-57.04-14.32-9.96-26.67-22.48-36.44-36.93-6.98,9.16-15.68,16.89-25.6,22.75l-10.65-5.7-45.4,3.1-9.69,13.19c-33-4.88-63.25-21.18-85.47-46.07-2.39-.09-4.79-.14-7.18-.14h0Z"/><path d="M47.27,179.52c2.08.25,4.16.62,6.21,1.1.16.62.32,1.25.49,1.88.13.81.27,1.56.4,2.28l.11.59c1.79,9.4,4.93,18.47,9.34,26.96.14.35.31.69.48,1.02,15.15,28.51,43.3,48.09,75.29,52.39.53.07,1.07.11,1.6.11,3.03,0,5.96-1.15,8.2-3.24l.75-.7,31.83-2.15c2.26,2.35,5.39,3.67,8.64,3.67.88,0,1.77-.1,2.65-.3,2.64-.6,5.28-1.27,7.9-2.01.71,1.82,1.46,3.62,2.24,5.41-2.97,2.33-6.1,4.43-9.38,6.29l-1.07-.49c-1.56-.71-3.26-1.08-4.97-1.08-.27,0-.54,0-.81.03l-42.88,2.9c-3.52.24-6.76,2.02-8.85,4.86l-1.24,1.68c-.84-.14-1.68-.3-2.52-.45-14.15-2.68-27.66-7.66-40.15-14.78-14.8-8.48-27.64-19.59-38.17-33.02-2.31-2.95-5.82-4.6-9.45-4.6-1.15,0-2.32.17-3.46.51-2.43.73-4.5,2.19-5.99,4.1-6.29-.18-12.54-1.36-18.46-3.49.69-4.2,1.46-8.3,2.3-12.27,4.77-2.25,9.66-4.28,14.61-6.07,3.75-1.36,6.58-4.48,7.55-8.35,1.93-7.65,4.21-15.28,6.79-22.78M40.18,167.09c-.39,0-.78,0-1.17,0-4,10.55-7.39,21.32-10.15,32.26-7.1,2.57-14.02,5.58-20.74,9.01l-.23.13c-2.16,9.12-3.82,18.44-5.06,27.75,10.3,5.44,21.74,8.25,33.32,8.25,2.49,0,4.98-.13,7.47-.39.1-1.42.22-2.79.33-4.24,11.43,14.59,25.57,26.82,41.65,36.03,13.63,7.78,28.46,13.24,43.88,16.16,3.35.64,6.73,1.16,10.15,1.57l5.5-7.47,42.88-2.9,6.38,2.9c8.79-4.19,16.83-9.8,23.78-16.62-3.91-7.5-7.08-15.37-9.47-23.49-5.89,2.2-11.93,3.99-18.06,5.38-.41-.62-2.31-3.57-2.67-4.11l-42.88,2.9-3.87,3.63c-28.24-3.79-52.92-20.97-66.29-46.13v-.07c-.06-.11-.12-.22-.16-.33-4.01-7.59-6.87-15.74-8.47-24.18-.19-1.02-.38-1.96-.51-2.9v-.09c-.81-2.96-1.51-5.93-2.07-8.98-1.99-.75-4.03-1.38-6.09-1.9-5.7-1.45-11.55-2.19-17.42-2.19h0Z"/><path d="M113.97,67.44c.15.58.29,1.15.42,1.73-.15.29-.3.58-.45.87-.92,1.68-1.74,3.38-2.46,4.89-.02.04-.04.08-.06.12-13.78,29.53-15.82,62.85-5.75,93.84.39,1.2.97,2.34,1.72,3.36,10.64,14.59,24.52,26.95,40.25,35.86,1.03.82,2.21,1.49,3.52,1.95l.21.07c1.46.59,3.02.89,4.59.89.31,0,.62-.01.93-.04.02,0,.04,0,.07,0l.7.07s.1,0,.15.01c3.75.33,7.57.5,11.33.5,8.52,0,16.94-.83,25.21-2.49-.38,2.81-.64,5.64-.78,8.47-1.71-.9-3.63-1.4-5.61-1.4-.28,0-.56,0-.83.03l-41.72,2.9c-2.53.18-4.93,1.15-6.87,2.77-5.27-3.13-10.27-6.72-14.9-10.72-.93-.81-2.14-1.87-3.21-2.88-.06-.05-.12-.11-.17-.16-.55-.5-1-.94-1.42-1.37-.03-.03-.06-.07-.1-.1l-1.41-1.41c-16.23-16.55-26.5-38.36-28.93-61.42-.64-6.03-5.67-10.64-11.73-10.74-4.91-.08-9.83-.52-14.69-1.29-2.03-2.9-3.91-5.91-5.62-9,3.98-6.46,8.44-13.03,13.27-19.58,3.94-1.13,7.92-2.13,11.9-2.96,3.21-.67,6-2.63,7.73-5.41,6.54-10.53,14.95-19.81,24.72-27.38M120.4,48.78c-16.88,9.57-31.1,23.22-41.34,39.7-5.62,1.18-11.18,2.63-16.68,4.35-5.8,7.67-11.6,16.04-16.89,24.69-1,1.58-1.99,3.13-2.9,4.73,3.45,7.24,7.65,14.1,12.53,20.47,7.03,1.43,14.17,2.21,21.34,2.34,2.73,25.86,14.12,50.04,32.33,68.6l1.45,1.45c.62.64,1.25,1.23,1.91,1.84,1.16,1.1,2.41,2.2,3.61,3.25,7.49,6.47,15.78,11.96,24.66,16.32l5.8-5.45,41.72-2.9,4.63,7.15c4.51-1.17,8.94-2.62,13.27-4.35-1.3-13.28.45-26.67,5.12-39.17-13.38,5.15-27.56,7.78-41.83,7.78-3.42,0-6.85-.15-10.27-.45-1.15-.12-2.26-.22-3.38-.36.1.05.19.13.29.19l.19.07c-.06,0-.13-.03-.19-.07l-.63-.22c.06,0,.12.01.17.01s.12,0,.17-.01c-15.14-8.18-28.26-19.65-38.4-33.55-9.1-27.99-7.24-58.38,5.21-85.05.73-1.51,1.47-3.05,2.26-4.5.78-1.55,1.64-3.1,2.5-4.55-1.45-7.64-3.68-15.11-6.66-22.3h0Z"/><path d="M193.45,26c-.14,6.47-.76,12.93-1.87,19.35-.65,3.78.54,7.65,3.21,10.4,2.28,2.34,5.39,3.64,8.61,3.64.56,0,1.13-.04,1.7-.12,6.02-.86,12.15-1.29,18.23-1.29,1.68,0,3.38.03,5.06.1.16,0,.31,0,.47,0,3.98,0,7.71-1.97,9.94-5.29,3.22-4.78,7.37-8.8,12.12-11.89-2.11,8.23-3.18,16.74-3.15,25.29.01,3.79,1.81,7.35,4.86,9.6,2.09,1.55,4.6,2.36,7.14,2.36,1.16,0,2.33-.17,3.46-.51,7.61-2.29,16.37-4.89,25.55-7.59-1.53,1.15-2.99,2.28-4.36,3.37-.06.05-.13.1-.19.15-.75.62-2.09,1.68-3.38,2.7-1.43,1.13-2.78,2.19-3.76,3.01l-3,2.38c-2.8,2.22-4.46,5.58-4.53,9.15-.07,3.57,1.45,6.99,4.16,9.33.7.6,1.4,1.2,2.11,1.78-.84,10.69-.34,21.43,1.49,32.02.26,1.51.81,2.95,1.61,4.25.05.08,4.81,7.82,7.09,11.59,7.01,11.65,15.04,22.8,23.87,33.14.11.13.23.26.35.39.96,1.03,1.91,2.03,2.82,3.01,9.19,9.75,13.84,14.67,14.38,26.44-.08,4.24-3.62,10.48-6.75,15.98-.7,1.23-1.41,2.48-2.1,3.74-1.02.04-2.04.06-3.05.06-10.41,0-20.82-2.17-30.38-6.29-13.84-30.15-42.19-51.96-75.11-57.42-3.76-.61-8.24-.92-13.3-.92-5.64,0-11.98.39-17.88,1.09-15.1-7.48-26.13-17.22-31.42-27.73-.19-3.63-.17-7.94-.15-12.46.05-9.7.11-19.7-1.81-28.25,2.17-12.14,6.44-23.6,12.7-34.17,3.38-.51,6.78-.85,10.18-1.03,5.38-.28,9.91-4.11,11.09-9.37,1.89-8.46,5.16-16.48,9.76-23.88,1.3-2.11,2.72-4.16,4.23-6.14M203.55,0c-2.86,1.98-5.6,4.13-8.2,6.44-3.62,3.2-6.97,6.7-10.01,10.46-2.3,2.84-4.42,5.82-6.34,8.94-5.27,8.49-9.08,17.81-11.26,27.56-5.67.3-11.32,1-16.89,2.12-9.08,13.75-15.09,29.3-17.62,45.58,3.42,11.69,1.32,30.75,2.39,43.26,10.73,24.47,39.78,36.13,41.24,37.03,5.64-.83,12.98-1.46,19.87-1.46,4.1,0,8.04.22,11.37.77,30.58,5.07,56.29,25.74,67.82,54.51,12.34,6.17,25.9,9.35,39.6,9.35,3.57,0,7.14-.22,10.71-.65,4.35-9.75,13.24-20.64,13.2-31.36-.73-17.93-9.08-25.23-20.42-37.4-8.43-9.87-16.03-20.42-22.72-31.54-2.34-3.87-7.15-11.69-7.15-11.69-2.02-11.68-2.25-23.59-.68-35.34-2.36-1.74-4.69-3.6-6.9-5.51l3.1-2.47c1.74-1.45,5.51-4.35,7.25-5.8,16.73-13.37,48.06-31.91,64.81-45.29-27.71,8.34-69.28,20.31-96.96,28.65-.05-15.47,3.95-30.69,11.6-44.14-17.16.91-32.9,9.82-42.52,24.07-1.84-.07-3.69-.11-5.53-.11-6.67,0-13.33.47-19.93,1.41,2.71-15.68,2.76-31.7.15-47.39h0Z"/><path d="M316.39,228.54c-.62-2.65-12.18-11.87-13.87-12.73-2.7-1.36-7.4,1.22-9.96,2.88-.57.37-.92,1.01-.92,1.69s.35,1.32.93,1.68l11.45,7.25c.24.15.5.25.78.29l9.36,1.38c.1.01.2.02.29.02.56,0,1.09-.23,1.47-.65.45-.49.63-1.17.47-1.81Z"/><path d="M237.18,138c-.2-.44-5.06-10.82-12.22-17.21-7.4-6.6-25.22-6.81-25.98-6.82-.8.02-1.5.45-1.83,1.16-.33.71-.21,1.55.3,2.15l13.52,15.61c.24.28.56.49.91.6l22.88,7.25c.2.06.4.09.6.09.56,0,1.11-.24,1.5-.68.52-.6.65-1.44.31-2.16Z"/><path d="M404.81,224.1h38.91c0,11.44,4.1,20.14,12.29,26.11,7,5.12,16.38,7.68,28.16,7.68,9.22,0,16.9-1.45,23.04-4.35,8.36-3.92,12.54-10.07,12.54-18.43,0-10.41-9.39-18.26-28.16-23.55-32.43-9.22-49.92-14.5-52.48-15.87-18.78-9.04-28.16-23.3-28.16-42.75,0-17.58,7.25-31.49,21.76-41.73,12.97-9.04,28.5-13.57,46.59-13.57,20.99,0,37.97,4.52,50.94,13.57,14.85,10.41,22.27,25.52,22.27,45.31h-38.91c-1.02-18.43-13.06-27.65-36.1-27.65-7.34,0-13.57,1.54-18.69,4.61-5.98,3.76-8.96,9.13-8.96,16.13s3.33,11.52,9.98,14.59c5.12,2.39,19.97,6.74,44.54,13.06,14.34,3.58,25,7.68,32,12.29,14.85,9.56,22.27,23.21,22.27,40.96s-6.49,31.4-19.46,41.98c-13.66,11.1-32.51,16.64-56.58,16.64-22.02,0-40.11-5.2-54.27-15.62-15.87-11.78-23.72-28.24-23.55-49.41Z"/><path d="M582.47,284.78V101.99h40.19v182.78h-40.19Z"/><path d="M794.18,284.78l-4.1-20.74c-12.97,16.73-29.7,25.09-50.18,25.09-27.48,0-49.5-9.22-66.05-27.65-15.87-17.58-23.81-40.02-23.81-67.33s7.94-50.86,23.81-68.61c16.38-18.6,38.4-27.9,66.05-27.9,19.62,0,36.61,5.55,50.94,16.64,15.36,11.95,24.06,27.9,26.11,47.87h-38.4c-2.22-9.9-6.78-17.49-13.7-22.78-6.91-5.29-15.23-7.94-24.96-7.94-16.9,0-29.7,6.49-38.4,19.46-7.51,11.1-11.26,25.52-11.26,43.26s3.75,31.06,11.26,41.98c8.87,12.8,21.67,19.2,38.4,19.2,26.62,0,41.13-13.14,43.52-39.42h-40.45v-29.95h76.8v98.82h-25.6Z"/><path d="M852.29,284.78V101.99h82.43c21.33,0,37.54,6.06,48.64,18.18,9.73,10.41,14.59,23.9,14.59,40.45s-4.86,30.04-14.59,40.45c-11.1,12.12-27.31,18.18-48.64,18.18h-42.24v65.54h-40.19ZM892.48,133.22v54.78h31.23c10.92,0,19.11-1.62,24.58-4.86,7.17-4.44,10.75-11.94,10.75-22.53s-3.58-18.09-10.75-22.53c-5.46-3.24-13.66-4.86-24.58-4.86h-31.23Z"/><path d="M1212.22,152.42l-41.73,132.35h-37.38l-23.55-88.83h-.51l-22.53,88.83h-37.63l-41.98-132.35h38.4l24.32,89.86h.51l22.02-89.86h35.33l22.53,89.6h.51l24.32-89.6h37.38Z"/><path d="M1227.58,284.78v-132.35h34.56v18.43h.77c9.04-14.68,22.53-22.02,40.45-22.02s31.14,4.95,38.66,14.85c6.48,8.54,9.73,21.76,9.73,39.68v81.41h-36.35v-74.75c0-21.67-7.77-32.51-23.3-32.51-9.9,0-17.07,2.99-21.5,8.96-4.44,5.98-6.66,15.62-6.66,28.93v69.38h-36.35Z"/><path d="M1499.96,152.42l-55.3,148.99c-3.93,10.75-9.39,18.43-16.38,23.04-7,4.61-16.73,6.91-29.18,6.91-6.66,0-14.08-.43-22.27-1.28v-29.95c12.8,1.02,19.88,1.45,21.25,1.28,9.38-.68,14.08-6.23,14.08-16.64,0-2.9-.51-5.63-1.54-8.19l-46.59-124.16h38.91l29.95,90.62h.51l28.93-90.62h37.63Z"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+  <script>
+    function wait(delay) {
+      return new Promise((resolve) => setTimeout(resolve, delay));
+    }
+
+    // start typewriter animation
+    async function startTyping() {
+      const words = ["Hacking.", "Food.", "Companies.", "Prizes."];
+
+      let index = 0;
+      while (true) {
+        await typeWord(words[index]);
+        await wait(300);
+        index = (index + 1) % words.length;
+      }
+    }
+
+    // type one word of animation at a time
+    async function typeWord(word) {
+      const tagline = document.getElementById("tagline");
+
+      for (const char of word) {
+        tagline.textContent += char;
+        await wait(150);
+      }
+
+      await wait(1000);
+
+      for (const char of word) {
+        tagline.textContent = tagline.textContent.slice(0, -1);
+        await wait(80);
+      }
+    }
+
+    // start the animation
+    startTyping().then();
+
+    const hamburger = document.querySelector(".hamburger");
+    const navMenu = document.querySelector(".nav-menu");
+
+    hamburger.addEventListener("click", mobileMenu);
+
+    function mobileMenu() {
+      hamburger.classList.toggle("active");
+      navMenu.classList.toggle("active");
+    }
+  </script>
+</div>
+
+  </div>
+
+</main>
+
+
+
+<footer class="footer">
+  <div class="container text-center">
+    <a href="https://ctfd.io" class="text-secondary">
+      <small class="text-muted">
+        Powered by CTFd
+      </small>
+    </a>
+  </div>
+</footer>
+
+<div x-data>
+  <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div x-ref="toast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+      <div class="toast-header">
+        <strong class="me-auto" x-text="$store.toast.title"></strong>
+        <small>just now</small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body" x-html="$store.toast.html">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div x-data>
+  <div class="modal fade" x-ref="modal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" x-text="$store.modal.title"></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p x-html="$store.modal.html"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Got it!</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <script type="module"  src="/themes/core/static/assets/index.b6be5691.js"></script><script type="module"  src="/themes/core/static/assets/page.1b85bc2f.js"></script>
+
+
+
+
+
+</body>
+</html>

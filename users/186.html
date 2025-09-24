@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fall CTF 2025</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/files/14c0421b448cc63dc8a3cbbe9022d985/fallctf-2025-pwny.png" type="image/x-icon">
+
+  
+
+  
+    <link rel="stylesheet" href="/themes/core/static/assets/main.e9ec7884.css">
+  
+
+  
+
+  <script  src="/themes/core/static/assets/color_mode_switcher.52334129.js"></script>
+
+  <script type="text/javascript">
+      window.init = {
+          'urlRoot': "",
+          'csrfNonce': "d5d589b1f9af0490434674d626d66cb4b44360be1b0969f4ef16f6beeb70e535",
+          'userMode': "teams",
+          'userId': 0,
+          'userName': null,
+          'userEmail': null,
+          'userVerified': null,
+          'teamId': null,
+          'teamName': null,
+          'start': 1758474000,
+          'end': 1758495600,
+          'themeSettings': {"challenge_category_order": "function compare(a, b) {\r\n  if (a === \"Welcome\") return -1;\r\n  if (b === \"Welcome\") return 1;\r\n  return 0;\r\n}\r\n", "challenge_order": "function compare(a, b) {\r\n\r\n    // sort by value highest priority\r\n    if (a.value \u003c b.value) return -1;\r\n    if (a.value \u003e b.value) return 1;\r\n\r\n  const priority = {\u0027beginner\u0027: 1, \u0027easy\u0027: 5, \u0027medium\u0027: 10, \u0027hard\u0027: 100, \u0027extreme\u0027: 1000};\r\n  const a_tag_priority = Math.min(...(a.tags.map(v =\u003e priority[v.value] || Number.MAX_VALUE)));\r\n  const b_tag_priority = Math.min(...(b.tags.map(v =\u003e priority[v.value] || Number.MAX_VALUE)));\r\n  // sort by tag\r\n  if (a_tag_priority \u003c b_tag_priority) return -1;\r\n  if (a_tag_priority \u003e b_tag_priority) return 1;\r\n\r\n    // then sort by \u0027First\u0027, \u0027Second\u0027, \u0027Third\u0027 in name\r\n    const order = [\"First\", \"Second\", \"Third\"];\r\n    const getOrder = (name) =\u003e order.findIndex(v =\u003e name.includes(v));\r\n    const aOrder = getOrder(a.name);\r\n    const bOrder = getOrder(b.name);\r\n    if (aOrder !== -1 || bOrder !== -1) {\r\n        if (aOrder \u003c bOrder) return -1;\r\n        if (aOrder \u003e bOrder) return 1;\r\n    }\r\n\r\n    // then sort by first Roman numeral (I, II, III, IV, V) if present\r\n    const romanOrder = [\"I\", \"II\", \"III\", \"IV\", \"V\"];\r\n    const getRomanNum = (name) =\u003e {\r\n        const match = name.match(/\\b(I{1,3}|IV|V)\\b/);\r\n        return match ? romanOrder.indexOf(match[1]) : -1;\r\n    };\r\n    const aRomanNum = getRomanNum(a.name);\r\n    const bRomanNum = getRomanNum(b.name);\r\n    if (aRomanNum !== -1 || bRomanNum !== -1) {\r\n        if (aRomanNum \u003c bRomanNum) return -1;\r\n        if (aRomanNum \u003e bRomanNum) return 1;\r\n    }\r\n\r\n    // then sort by first number found in name\r\n    const getChallengeNum = (name) =\u003e {\r\n        const match = name.match(/(\\d+)/);\r\n        return match ? parseInt(match[1], 10) : Infinity;\r\n    };\r\n    const aChallengeNum = getChallengeNum(a.name);\r\n    const bChallengeNum = getChallengeNum(b.name);\r\n    if (aChallengeNum \u003c bChallengeNum) return -1;\r\n    if (aChallengeNum \u003e bChallengeNum) return 1;\r\n\r\n    return 0;\r\n}", "challenge_window_size": "lg", "use_builtin_code_highlighter": true},
+          'eventSounds': [
+            "/themes/core/static/sounds/notification.webm",
+            "/themes/core/static/sounds/notification.mp3",
+          ],
+      }
+  </script>
+
+  <style>
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* fixup code text */
+  pre code span {
+    color: white !important;
+  }
+
+  /* beginner styles at bottom */
+
+  body {
+    --color-primary: #41aaff;
+    --color-secondary: #99d4ff;
+    --color-text-body: #ffffff;
+    --color-text-nav: #000000;
+    --color-text-nav-hover: #ffffff;
+    --color-text-muted: #cccccc;
+    --color-background: #000000;
+    --color-surface-primary: #222222;
+    --color-surface-secondary: #111111;
+    --color-badge-bg: #000000;
+    --color-badge-text: #ffffff;
+    --color-beginner-tag: #41aaff;
+    --color-easy-tag: #33cc55;
+    --color-medium-tag: #ffc000;
+    --color-hard-tag: #ff4040;
+    --color-extreme-tag: #cc66ee;
+    /* challenge popup close button colors must be defined manually */
+
+    background-color: var(--color-background) !important;
+    color: var(--color-text-body) !important;
+    font-family: "Helvetica Neue", Arial, sans-serif; /* fonts */
+  }
+
+  @font-face {
+    font-family: "Helvetica Neue";
+    font-weight: 400;
+    font-style: normal;
+    src: url('https://sigpwny.com/fonts/HelveticaNeue-Regular.woff2') format("woff2"),
+    url('https://sigpwny.com/fonts/HelveticaNeue-Regular.woff') format("woff"),
+    url('https://sigpwny.com/fonts/HelveticaNeue-Regular.ttf') format("truetype");
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Helvetica Neue";
+    font-weight: 700;
+    font-style: normal;
+    src: url('https://sigpwny.com/fonts/HelveticaNeue-Bold.woff2') format("woff2"),
+    url('https://sigpwny.com/fonts/HelveticaNeue-Bold.woff') format("woff"),
+    url('https://sigpwny.com/fonts/HelveticaNeue-Bold.ttf') format("truetype");
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Helvetica Neue";
+    font-weight: 500;
+    font-style: normal;
+    src: url('https://sigpwny.com/fonts/HelveticaNeue-Medium.woff2') format("woff2"),
+    url('https://sigpwny.com/fonts/HelveticaNeue-Medium.woff') format("woff"),
+    url('https://sigpwny.com/fonts/HelveticaNeue-Medium.ttf') format("truetype");
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Helvetica Neue";
+    font-weight: 400;
+    font-style: italic;
+    src: url('https://sigpwny.com/fonts/HelveticaNeue-RegularItalic.woff2') format("woff2"),
+    url('https://sigpwny.com/fonts/HelveticaNeue-RegularItalic.woff') format("woff"),
+    url('https://sigpwny.com/fonts/HelveticaNeue-RegularItalic.ttf') format("truetype");
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Helvetica Neue";
+    font-weight: 300;
+    font-style: normal;
+    src: url('https://sigpwny.com/fonts/HelveticaNeue-Light.woff2') format("woff2"),
+    url('https://sigpwny.com/fonts/HelveticaNeue-Light.woff') format("woff"),
+    url('https://sigpwny.com/fonts/HelveticaNeue-Light.ttf') format("truetype");
+    font-display: swap;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-family: "Helvetica Neue", Arial, sans-serif !important;
+    font-weight: bold;
+    color: var(--color-primary);
+    letter-spacing: normal !important;
+  }
+  .larger-text h1 {
+    font-size: 3rem !important;
+  }
+  .larger-text h2 {
+    font-size: 2.5rem !important;
+  }
+  .larger-text {
+    font-size: 1.25rem !important;
+    line-height: 1.2;
+  }
+  .max-100 {
+    max-height: 100%;
+    max-width: 100%;
+  }
+  :not(i) {
+    font-family: "Helvetica Neue", Arial, sans-serif; /* fonts */
+  }
+  .text-muted {
+    color: var(--color-text-muted) !important;
+  }
+  .navbar {
+    background-color: var(--color-primary) !important; /* navbar */
+  }
+  .jumbotron h1,
+  .jumbotron h2,
+  .jumbotron h3 {
+    font-weight: bold !important;
+    color: var(--color-text-nav) !important;
+  }
+  .jumbotron .text-white {
+    color: var(--color-text-nav) !important;
+  }
+  .category-header,
+  .challenge-name,
+  .challenge-value {
+    font-weight: bold !important;
+  }
+  .modal-content {
+    background-color: var(
+      --color-surface-primary
+    ) !important; /* challenge popups */
+  }
+  .jumbotron {
+    background-color: var(--color-primary) !important; /* page header */
+    color: var(--color-text-nav);
+  }
+  .table,
+  .table td,
+  .table tr:nth-child(even),
+  .table tr:nth-child(odd),
+  .table > thead > tr > th,
+  .table-striped > tbody > tr:nth-of-type(odd) > *,
+  .table-striped > tbody > tr:nth-of-type(even) > * {
+    color: var(--color-text-body) !important;
+    background-color: transparent !important;
+  }
+  tr:nth-child(even) {
+    color: #f2f2f2;
+  }
+  a {
+    color: var(--color-primary) !important;
+  }
+  a:hover {
+    color: var(--color-secondary) !important;
+  }
+  .btn-dark {
+    background-color: var(
+      --color-background
+    ) !important; /* challenge buttons */
+    border-width: 4px !important;
+    border-style: solid !important;
+    border-color: var(--color-primary) !important;
+    box-shadow: none !important;
+    font-weight: bold !important;
+  }
+  .btn-dark:hover {
+    background-color: var(
+      --color-surface-primary
+    ) !important; /* challenge buttons */
+    border-width: 4px !important;
+    border-color: var(--color-primary) !important;
+  }
+  .btn-dark:active {
+    background-color: var(
+      --color-surface-primary
+    ) !important; /* challenge buttons */
+    border-width: 4px !important;
+    border-color: var(--color-primary) !important;
+  }
+  .challenge-solved {
+    background-color: var(--color-primary) !important; /* solved challenge */
+    border-color: var(--color-primary) !important;
+    border-width: 4px !important;
+    border-style: solid !important;
+    opacity: 1 !important;
+    color: var(--color-background) !important;
+  }
+  .challenge-solved:active {
+    background-color: var(--color-secondary) !important; /* solved challenge */
+    border-color: var(--color-secondary) !important;
+    border-width: 4px !important;
+    opacity: 1 !important;
+  }
+  .challenge-solved:hover {
+    background-color: var(--color-secondary) !important; /* solved challenge */
+    border-color: var(--color-secondary) !important;
+    border-width: 4px !important;
+    opacity: 1 !important;
+  }
+  .challenge-solved:focus {
+    background-color: var(--color-secondary) !important; /* solved challenge */
+    border-color: var(--color-secondary) !important;
+    border-width: 4px !important;
+    opacity: 1 !important;
+    box-shadow: none !important;
+  }
+  .btn-primary,
+  .btn-info,
+  .btn-outline-secondary {
+    background-color: var(--color-primary) !important; /* generic buttons */
+    color: var(--color-background) !important;
+    border: none !important;
+  }
+  .btn-primary:hover,
+  .btn-info:hover,
+  .btn-outline-secondary:hover {
+    background-color: var(--color-secondary) !important; /* generic buttons */
+    color: var(--color-background) !important;
+    border: none !important;
+  }
+  .btn-primary:active,
+  .btn-info:active,
+  .btn-outline-secondary:active {
+    background-color: var(--color-secondary) !important; /* generic buttons */
+    color: var(--color-background) !important;
+    border: none !important;
+  }
+  .btn-primary:focus,
+  .btn-info:focus,
+  .btn-outline-secondary:focus {
+    background-color: var(--color-secondary) !important; /* generic buttons */
+    color: var(--color-background) !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+  .modal-body .btn-close,
+  .modal-header .btn-close {
+    /* challenge popup close button */
+    background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ed7a31'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
+    opacity: 1 !important;
+  }
+  .modal-body .btn-close:hover,
+  .modal-header .btn-close:hover {
+    background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23995522'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
+    opacity: 1 !important;
+  }
+  input,
+  .form-control {
+    background-color: var(--color-surface-primary) !important;
+    color: var(--color-text-muted) !important;
+    border-color: var(--color-text-muted) !important;
+    box-shadow: none !important;
+  }
+  input:active,
+  .form-control:active {
+    background-color: var(--color-surface-secondary) !important;
+    color: var(--color-text-muted) !important;
+    border-color: var(--color-text-muted) !important;
+    box-shadow: none !important;
+  }
+  input:focus,
+  .form-control:focus {
+    background-color: var(--color-surface-secondary) !important;
+    color: var(--color-text-muted) !important;
+    border-color: var(--color-text-muted) !important;
+    box-shadow: none !important;
+  }
+  button.nav-link {
+    color: var(--color-primary) !important;
+  }
+  button.nav-link:hover {
+    color: var(--color-secondary) !important;
+  }
+  button.nav-link.active {
+    background-color: var(--color-primary) !important;
+    color: var(--color-text-nav) !important;
+  }
+  .jumbotron .bg-primary,
+  .jumbotron .bg-secondary {
+    /* badges that show team name/country in user profile */
+    background-color: var(--color-badge-bg) !important;
+    color: var(--color-badge-text) !important;
+  }
+  .nav-tabs {
+    border-bottom-color: var(--color-primary) !important;
+  }
+  .nav-tabs .nav-link {
+    background-color: transparent !important;
+    border-color: transparent !important;
+    color: var(--color-text-body) !important;
+  }
+  .nav-tabs .nav-link:hover {
+    background-color: transparent !important;
+    border-color: var(--color-primary) !important;
+    color: var(--color-text-body) !important;
+  }
+  .nav-tabs .active {
+    background-color: var(--color-primary) !important;
+    border-color: var(--color-primary) !important;
+    color: var(--color-text-nav) !important;
+  }
+  .nav-tabs .active:hover {
+    background-color: var(--color-primary) !important;
+    border-color: var(--color-primary) !important;
+    color: var(--color-text-nav) !important;
+  }
+  .navbar-dark .navbar-toggler {
+    color: var(--color-text-nav) !important;
+    border: none !important;
+    border-color: transparent !important;
+  }
+  .navbar-dark .navbar-toggler-icon {
+    /* mobile navbar toggle icon color override */
+    background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%280, 0, 0, 1.0%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+  }
+  a {
+    /* disable smooth transitions for links */
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -o-transition: none !important;
+    transition: none !important;
+  }
+  .navbar .navbar-brand,
+  .navbar .nav-item,
+  .navbar .nav-link {
+    color: var(--color-text-nav) !important;
+    font-weight: bold !important;
+  }
+  .navbar .navbar-brand:hover,
+  .navbar .nav-item:hover,
+  .navbar .nav-link:hover {
+    color: var(--color-text-nav-hover) !important;
+  }
+  ul {
+    margin: 0;
+  }
+  ul.dashed {
+    list-style-type: none;
+  }
+  ul.dashed > li {
+    text-indent: -5px;
+  }
+  ul.dashed > li:before {
+    content: "-";
+    text-indent: -5px;
+  }
+  .modal-content .nav-link:hover {
+    cursor: pointer; /* core-beta fix */
+  }
+  #score-graph {
+    background-color: #ffffff;
+    border-radius: 20px;
+  }
+
+  .challenge-button {
+    position: relative;
+  }
+
+  button.challenge-button::after {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    padding: 0.25em 0.4em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+    background-color: #5b7290 !important;
+    color: #000000;
+  }
+
+  button.challenge-button.tag-beginner::after {
+    content: "beginner";
+    background-color: var(--color-beginner-tag) !important;
+  }
+
+  button.challenge-button.tag-easy::after {
+    content: "easy";
+    background-color: var(--color-easy-tag) !important;
+  }
+
+  button.challenge-button.tag-medium::after {
+    content: "medium";
+    background-color: var(--color-medium-tag) !important;
+  }
+  button.challenge-button.tag-hard::after {
+    content: "hard";
+    background-color: var(--color-hard-tag) !important;
+  }
+  button.challenge-button.tag-extreme::after {
+    content: "extreme";
+    background-color: var(--color-extreme-tag) !important;
+  }
+  .panel { 
+    background-color: var(--color-surface-primary);
+    border: 2px solid #333333;
+    border-radius: 0.75rem;
+    padding: 1rem;
+  }
+</style>
+
+</head>
+<body>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+  <div class="container">
+    <a href="/" class="navbar-brand">
+      
+        Fall CTF 2025
+      
+    </a>
+
+    <button
+        class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#base-navbars"
+        aria-controls="base-navbars" aria-expanded="false" aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="base-navbars">
+      <ul class="navbar-nav me-auto">
+        
+
+        
+          <li class="nav-item">
+            <a class="nav-link" href="/users">
+              Users
+            </a>
+          </li>
+
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/teams">
+                Teams
+              </a>
+            </li>
+          
+        
+
+        
+          <li class="nav-item">
+            <a class="nav-link" href="/scoreboard">
+              Scoreboard
+            </a>
+          </li>
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/challenges">
+            Challenges
+          </a>
+        </li>
+      </ul>
+
+      <hr class="d-sm-flex d-md-flex d-lg-none">
+
+      <ul class="navbar-nav ms-md-auto d-block d-sm-flex d-md-flex">
+        
+
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/register">
+                <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Register">
+                  <i class="fas fa-user-plus d-none d-md-inline d-lg-none"></i>
+                </span>
+                <span class="d-sm-inline d-md-none d-lg-inline">
+                  <i class="fas fa-user-plus pe-1"></i>
+                  Register
+                </span>
+              </a>
+            </li>
+          
+
+          <li class="nav-item">
+            <a class="nav-link" href="/login">
+              <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Login">
+                <i class="fas fa-sign-in-alt d-none d-md-inline d-lg-none"></i>
+              </span>
+              <span class="d-sm-inline d-md-none d-lg-inline">
+                <i class="fas fa-sign-in-alt pe-1"></i>
+                Login
+              </span>
+            </a>
+          </li>
+        
+
+        <li class="nav-item dropdown">
+          <button class="nav-link dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-language d-none d-md-inline"></i>
+            <span class="d-sm-inline d-md-none">
+              <i class="fas fa-language pe-1"></i>
+              Change language
+            </span>
+          </button>
+          <form x-data="LanguageForm">
+            <ul class="dropdown-menu dropdown-menu-end">
+              
+              <li>
+                  <span class="dropdown-item bg-primary text-white" @click="set" value="en">
+                    English
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="de">
+                    Deutsch
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="pl">
+                    Polski
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="es">
+                    Español
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="ar">
+                    اَلْعَرَبِيَّةُ
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="zh_CN">
+                    简体中文
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="zh_TW">
+                    繁體中文
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="fr">
+                    Français
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="ko">
+                    한국어
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="ru">
+                    русский язык
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="pt_BR">
+                    Português do Brasil
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="sk">
+                    Slovenský jazyk
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="ja">
+                    日本語
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="it">
+                    Italiano
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="vi">
+                    tiếng Việt
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="ca">
+                    Català
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="el">
+                    Ελληνικά
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="fi">
+                    Suomi
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="ro">
+                    Română
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="sl">
+                    Slovenščina
+                  </span>
+              </li>
+              <li>
+                  <span class="dropdown-item " @click="set" value="sv">
+                    Svenska
+                  </span>
+              </li>
+            </ul>
+          </form>
+        </li>
+
+        <li class="nav-item">
+          <button class="nav-link theme-switch" type="button">
+            <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Toggle theme">
+              <i class="fas fa-sun d-none d-md-inline"></i>
+            </span>
+            <span class="d-sm-inline d-md-none">
+              <i class="fas fa-sun pe-1"></i>
+              Toggle theme
+            </span>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main role="main">
+  
+  <div class="jumbotron">
+    <div class="container">
+      <h1>username</h1>
+
+      
+        <h2>
+          <a href="/teams/119">
+            <span class="badge bg-secondary">
+              teamname
+            </span>
+          </a>
+        </h2>
+      
+
+      <div class="pt-2">
+        
+
+        
+
+        
+      </div>
+
+      
+
+      <div class="pt-2">
+        
+      </div>
+
+      
+
+      <div>
+        <h2 class="text-center">
+          
+        </h2>
+        <h2 class="text-center">
+          
+        </h2>
+      </div>
+
+      <div class="pt-3">
+        
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div>
+  
+
+  
+</div>
+
+    
+    
+    
+
+      
+        <div class="row">
+          <div class="col-md-12">
+            <h3>Awards</h3>
+          </div>
+          
+            <div class="col-md-3 col-sm-6">
+              <p class="text-center">
+                <i class="award-icon award- fa-2x"></i>
+                <br>
+                <strong>Hint 321</strong>
+              </p>
+              <p class="text-center">hints</p>
+              <p class="text-center">Hint for FTX Feedback 2</p>
+              <p class="text-center">0</p>
+            </div>
+          
+            <div class="col-md-3 col-sm-6">
+              <p class="text-center">
+                <i class="award-icon award- fa-2x"></i>
+                <br>
+                <strong>Hint 322</strong>
+              </p>
+              <p class="text-center">hints</p>
+              <p class="text-center">Hint for FTX Feedback 2</p>
+              <p class="text-center">0</p>
+            </div>
+          
+            <div class="col-md-3 col-sm-6">
+              <p class="text-center">
+                <i class="award-icon award- fa-2x"></i>
+                <br>
+                <strong>Hint 323</strong>
+              </p>
+              <p class="text-center">hints</p>
+              <p class="text-center">Hint for FTX Feedback 2</p>
+              <p class="text-center">0</p>
+            </div>
+          
+            <div class="col-md-3 col-sm-6">
+              <p class="text-center">
+                <i class="award-icon award- fa-2x"></i>
+                <br>
+                <strong>Hint 324</strong>
+              </p>
+              <p class="text-center">hints</p>
+              <p class="text-center">Hint for FTX Feedback 2</p>
+              <p class="text-center">0</p>
+            </div>
+          
+            <div class="col-md-3 col-sm-6">
+              <p class="text-center">
+                <i class="award-icon award- fa-2x"></i>
+                <br>
+                <strong>Hint 337</strong>
+              </p>
+              <p class="text-center">hints</p>
+              <p class="text-center">Hint for Mid Encryption</p>
+              <p class="text-center">0</p>
+            </div>
+          
+        </div>
+      
+
+      <br>
+
+      <div class="row">
+        <div class="col-md-12">
+          <h3>Solves</h3>
+          <table class="table table-striped align-middle">
+            <thead>
+            <tr>
+              <th>Challenge</th>
+              <th class="d-none d-md-block d-lg-block">Category</th>
+              <th>Value</th>
+              <th>Time</th>
+            </tr>
+            </thead>
+            <tbody>
+            
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="clearfix"></div>
+
+      <div class="row" x-data="UserGraphs">
+        <div class="col-md-6 d-none d-md-block d-lg-block py-4">
+          <div class="progress">
+            <div 
+              class="progress-bar" 
+              role="progressbar" 
+              :style="{ width: `${getSolvePercentage()}%`, 'background-color': 'rgb(0, 209, 64)' }" 
+            >
+            </div>
+            <div 
+              class="progress-bar" 
+              role="progressbar" 
+              :style="{ width: `${getFailPercentage()}%`, 'background-color': 'rgb(207, 38, 0)' }"
+            >
+            </div>
+          </div>
+          <div class="ps-2 float-start">
+            <svg height="16" width="16">
+              <circle cx="8" cy="8" r="5" fill="rgb(0, 209, 64)" />
+            </svg>
+            <small x-text="`Solves (${getSolvePercentage()}%)`"></small>
+          </div>
+          <div class="ps-2 float-start">
+            <svg height="16" width="16">
+              <circle cx="8" cy="8" r="5" fill="rgb(207, 38, 0)" />
+            </svg>
+            <small x-text="`Fails (${getFailPercentage()}%)`"></small>
+          </div>
+        </div>
+        <div class="col-md-6 d-none d-md-block d-lg-block py-4">
+          <div class="progress">
+            <template x-for="category in getCategoryBreakdown()" :key="category.name">
+              <div 
+                class="progress-bar" 
+                role="progressbar" 
+                :style="{ width: `${category.percent}%`, 'background-color': category.color }"
+              >
+              </div>
+            </template>
+          </div>
+          <template x-for="category in getCategoryBreakdown()" :key="category.name">
+            <div class="ps-2 float-start">
+              <svg height="16" width="16">
+                <circle cx="8" cy="8" r="5" :fill="category.color" />
+              </svg>
+              <small x-text="`${category.name} (${category.percent}%)`"></small>
+            </div>
+          </template>
+        </div>
+
+        <br class="clearfix">
+
+        <div class="col-md-12 d-none d-md-block d-lg-block py-4">
+          <div id="score-graph" x-ref="scoregraph" class="w-100 d-flex align-items-center">
+            <div class="text-center w-100">
+              <i class="fas fa-circle-notch fa-spin fa-3x fa-fw spinner"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+  </div>
+
+</main>
+
+
+
+<footer class="footer">
+  <div class="container text-center">
+    <a href="https://ctfd.io" class="text-secondary">
+      <small class="text-muted">
+        Powered by CTFd
+      </small>
+    </a>
+  </div>
+</footer>
+
+<div x-data>
+  <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div x-ref="toast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+      <div class="toast-header">
+        <strong class="me-auto" x-text="$store.toast.title"></strong>
+        <small>just now</small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body" x-html="$store.toast.html">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div x-data>
+  <div class="modal fade" x-ref="modal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" x-text="$store.modal.title"></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p x-html="$store.modal.html"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Got it!</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <script>
+      window.USER = {"account_id": 186, "id": 186, "name": "username", "type": "user"};
+  </script>
+
+  <script type="module"  src="/themes/core/static/assets/index.b6be5691.js"></script><script type="module"  src="/themes/core/static/assets/userscore.34b29f86.js"></script><script type="module"  src="/themes/core/static/assets/index.1cf73b05.js"></script><script type="module"  src="/themes/core/static/assets/echarts.128204f2.js"></script><script type="module"  src="/themes/core/static/assets/users_public.4d659b93.js"></script>
+
+
+
+
+
+</body>
+</html>
